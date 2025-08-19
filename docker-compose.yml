@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - FLASK_ENV=development
+      - DATABASE_URL=sqlite:///data/vivace.db
+      - SECRET_KEY=development-secret-key
+      - JWT_SECRET_KEY=development-jwt-secret
+    command: python app.py
+
+  # Serviço PostgreSQL para produção (opcional)
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: vivace_db
+      POSTGRES_USER: vivace_user
+      POSTGRES_PASSWORD: vivace_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data:
